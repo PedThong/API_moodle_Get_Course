@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome - Learning Platform</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #FFFFFF;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .particle {
+      position: fixed;
+      width: 6px;
+      height: 6px;
+      background-color: #E94C15;
+      border-radius: 50%;
+      bottom: 0;
+      left: 50%;
+      opacity: 0.7;
+      animation: floatUp 4s linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) scale(1);
+        opacity: 0.8;
+      }
+
+      50% {
+        opacity: 0.4;
+      }
+
+      100% {
+        transform: translateY(-100vh) scale(0.5);
+        opacity: 0;
+      }
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px 40px;
+      position: relative;
+      z-index: 1;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+    }
+
+    .hero-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: center;
+      width: 100%;
+    }
+
+    .content {
+      animation: slideInLeft 0.8s ease-out;
+    }
+
+    .welcome-text {
+      font-size: 3rem;
+      font-weight: 700;
+      color: #185763;
+      margin-bottom: 15px;
+      line-height: 1.1;
+    }
+
+    .subtitle {
+      font-size: 2rem;
+      margin-bottom: 30px;
+    }
+
+    .grow {
+      color: #E94C15;
+      font-weight: 800;
+    }
+
+    .tagline {
+      color: #185763;
+      font-weight: 400;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 15px;
+      margin-top: 25px;
+    }
+
+    .btn {
+      padding: 12px 25px;
+      border: none;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-primary {
+      background: #E94C15;
+      color: white;
+      box-shadow: 0 4px 15px rgba(233, 76, 21, 0.3);
+    }
+
+    .btn-primary:hover {
+      background: #d63f12;
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: #185763;
+      border: 2px solid #185763;
+    }
+
+    .btn-secondary:hover {
+      background: #185763;
+      color: #FFFFFF;
+      transform: translateY(-2px);
+    }
+
+    .visual-section {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .visual-section img {
+      max-width: 80%;
+      height: auto;
+      filter: none !important;
+      mix-blend-mode: normal !important;
+    }
+
+    @keyframes slideInLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-50px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 15px 20px;
+      }
+
+      .hero-section {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 20px;
+      }
+
+      .welcome-text {
+        font-size: 2.2rem;
+      }
+
+      .subtitle {
+        font-size: 1.5rem;
+      }
+
+      .visual-section {
+        order: -1;
+      }
+
+      .visual-section img {
+        max-width: 60%;
+      }
+
+      .button-group {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .btn {
+        font-size: 0.9rem;
+        padding: 10px 20px;
+        width: 100%;
+        max-width: 200px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="hero-section">
+      <div class="content">
+        <h1 class="welcome-text">Welcome,</h1>
+        <p class="subtitle">
+          <span class="grow">Grow.</span>
+          <span class="tagline">Anytime. Anywhere.</span>
+        </p>
+        <div class="button-group">
+          <a href="https://gdacademy.goldenduckgroup.com/moodle/my/courses.php" class="btn btn-primary" target="_top">My
+            Courses</a>
+          <a href="https://gdacademy.goldenduckgroup.com/moodle/course/index.php" class="btn btn-secondary"
+            target="_top">Explore</a>
+        </div>
+      </div>
+      <div class="visual-section">
+        <img src="image/logo.png" alt="Learning Logo">
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function createParticle() {
+      const particle = document.createElement('div');
+      particle.classList.add('particle');
+      
+      // สุ่มตำแหน่งจากด้านล่างของหน้าจอ
+      particle.style.left = Math.random() * window.innerWidth + 'px';
+      
+      // สุ่มสีระหว่าง 2 สี
+      particle.style.backgroundColor = Math.random() > 0.5 ? '#185763' : '#E94C15';
+      
+      // สุ่มขนาด particle
+      const size = Math.random() * 4 + 3;
+      particle.style.width = particle.style.height = size + 'px';
+      
+      // สุ่ม opacity
+      particle.style.opacity = Math.random() * 0.5 + 0.3;
+      
+      document.body.appendChild(particle);
+
+      // ลบ particle หลังจากแอนิเมชันเสร็จ
+      setTimeout(() => {
+        if (particle.parentNode) {
+          particle.remove();
+        }
+      }, 4000);
+    }
+
+    // สร้าง particle ทุก 300ms
+    setInterval(createParticle, 300);
+    
+    // สร้าง particle เริ่มต้นทันทีเมื่อโหลดหน้า
+    for (let i = 0; i < 5; i++) {
+      setTimeout(createParticle, i * 100);
+    }
+  </script>
+</body>
+
+</html>
