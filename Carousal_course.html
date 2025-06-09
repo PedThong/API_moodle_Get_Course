@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Welcome - Learning Platform</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sukhumvit+Set:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <!-- Add Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Gotham:wght@300;400;600;700;800&display=swap');
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Gotham', 'Sukhumvit Set', sans-serif;
+      background: #FFFFFF;
+      min-height: 100vh;
+      overflow-x: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Carousel Section */
+    .carousel-wrapper {
+      background: #FFFFFF;
+      padding: 60px 0;
+      position: relative;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .carousel-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 70px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .header {
+      margin: 0 0 40px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      width: 100%;
+      max-width: 1200px;
+    }
+
+    .header h2 {
+      font-size: 2rem;
+      color: #185763;
+      font-family: 'Sukhumvit Set', sans-serif;
+      font-weight: 600;
+    }
+
+    .btn {
+      padding: 15px 30px;
+      border: none;
+      border-radius: 50px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+      font-family: 'Gotham', 'Sukhumvit Set', sans-serif;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: #185763;
+      border: 2px solid #185763;
+    }
+
+    .btn-secondary:hover {
+      background: #185763;
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    .refresh-btn {
+      font-family: 'Sukhumvit Set', sans-serif;
+    }
+
+    .refresh-btn-text {
+      display: inline;
+    }
+
+    .slide-container {
+      overflow: hidden;
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .carousel-track {
+      display: flex;
+      transition: transform 0.6s ease-in-out;
+      will-change: transform;
+    }
+
+    .course-grid {
+      display: flex;
+      flex: 0 0 100%;
+      gap: 20px;
+      justify-content: center;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      width: 30%;
+      min-width: 280px;
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      background: #ddd;
+    }
+
+    .card-content {
+      padding: 16px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: #004e5a;
+      margin-bottom: 8px;
+      font-family: 'Sukhumvit Set', sans-serif;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1.3;
+    }
+
+    .card-summary {
+      font-size: 0.9rem;
+      color: #555;
+      max-height: 80px;
+      overflow: hidden;
+      font-family: 'Sukhumvit Set', sans-serif;
+    }
+
+    .carousel-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      margin-top: 20px;
+      width: 100%;
+    }
+
+    .carousel-btn {
+      background: #004e5a;
+      color: white;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      font-size: 18px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .carousel-btn:hover {
+      background: #185763;
+      transform: scale(1.1);
+    }
+
+    .carousel-dots {
+      display: flex;
+      gap: 8px;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #ccc;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .dot.active {
+      background: #004e5a;
+    }
+
+    .loading, .error {
+      text-align: center;
+      margin: 30px;
+      font-size: 1rem;
+      color: #666;
+      font-family: 'Sukhumvit Set', sans-serif;
+    }
+
+    /* Mobile Responsive - 768px and below */
+    @media (max-width: 768px) {
+      .carousel-container {
+        padding: 0 40px;
+      }
+      
+      .header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 15px;
+        margin-bottom: 30px;
+      }
+    }
+
+    /* Mobile Responsive - 480px and below */
+    @media (max-width: 480px) {
+      body {
+        align-items: flex-start;
+        padding-top: 20px;
+      }
+
+      .carousel-wrapper {
+        padding: 40px 0;
+      }
+
+      .carousel-container {
+        padding: 0 20px;
+      }
+
+      .header {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 30px;
+        text-align: center;
+      }
+
+      .header h2 {
+        font-size: 1.5rem;
+      }
+
+      .refresh-btn {
+        font-size: 0.9rem;
+        padding: 10px 20px;
+      }
+
+      .course-grid {
+        justify-content: center;
+      }
+
+      .card {
+        width: 100%;
+        max-width: 280px;
+        min-width: auto;
+      }
+
+      /* Show only first card per slide on mobile */
+      .card:not(:first-child) {
+        display: none;
+      }
+
+      .carousel-controls {
+        gap: 15px;
+        margin-top: 15px;
+      }
+
+      .carousel-btn {
+        width: 35px;
+        height: 35px;
+        font-size: 16px;
+      }
+
+      .dot {
+        width: 10px;
+        height: 10px;
+      }
+    }
+
+    /* Extra Small Mobile - 250px to 350px */
+    @media (max-width: 350px) {
+      .carousel-wrapper {
+        padding: 30px 0;
+      }
+
+      .carousel-container {
+        padding: 0 15px;
+      }
+
+      .header h2 {
+        font-size: 1.3rem;
+        line-height: 1.3;
+      }
+
+      .refresh-btn {
+        font-size: 0.8rem;
+        padding: 8px 16px;
+      }
+
+      .refresh-btn-text {
+        display: none;
+      }
+
+      .card {
+        max-width: 220px;
+        min-width: 200px;
+      }
+
+      .card img {
+        height: 140px;
+      }
+
+      .card-content {
+        padding: 12px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+      }
+
+      .card-title {
+        font-size: 1rem;
+        line-height: 1.3;
+        -webkit-line-clamp: 2;
+      }
+
+      .card-summary {
+        font-size: 0.8rem;
+        max-height: 60px;
+        line-height: 1.4;
+      }
+
+      .carousel-controls {
+        gap: 10px;
+        margin-top: 15px;
+      }
+
+      .carousel-btn {
+        width: 30px;
+        height: 30px;
+        font-size: 14px;
+      }
+
+      .dot {
+        width: 8px;
+        height: 8px;
+      }
+    }
+
+    /* Ultra Small - 250px */
+    @media (max-width: 250px) {
+      .carousel-wrapper {
+        padding: 20px 0;
+      }
+
+      .carousel-container {
+        padding: 0 10px;
+      }
+
+      .header {
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+
+      .header h2 {
+        font-size: 1.1rem;
+        line-height: 1.2;
+      }
+
+      .refresh-btn {
+        font-size: 0.7rem;
+        padding: 6px 12px;
+        min-width: 40px;
+      }
+
+      .card {
+        max-width: 180px;
+        min-width: 160px;
+      }
+
+      .card img {
+        height: 120px;
+      }
+
+      .card-content {
+        padding: 10px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+      }
+
+      .card-title {
+        font-size: 0.9rem;
+        line-height: 1.2;
+        margin-bottom: 0;
+        -webkit-line-clamp: 2;
+      }
+
+      .card-summary {
+        display: none;
+      }
+
+      .carousel-controls {
+        gap: 8px;
+        margin-top: 10px;
+      }
+
+      .carousel-btn {
+        width: 25px;
+        height: 25px;
+        font-size: 12px;
+      }
+
+      .dot {
+        width: 6px;
+        height: 6px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Carousel Section -->
+  <div class="carousel-wrapper">
+    <div class="carousel-container">
+      <div class="header">
+        <h2>📖 Check Out! our new courses</h2>
+        <button class="refresh-btn btn btn-secondary" onclick="loadLatestCourses()">
+          <i class="fas fa-redo"></i> 
+          <span class="refresh-btn-text">โหลดใหม่</span>
+        </button>
+      </div>
+
+      <div class="slide-container">
+        <div id="carouselTrack" class="carousel-track">
+          <!-- Slides will be loaded here -->
+        </div>
+      </div>
+
+      <div class="carousel-controls">
+        <button class="carousel-btn" onclick="prevSlide()">‹</button>
+        <div id="carouselDots" class="carousel-dots"></div>
+        <button class="carousel-btn" onclick="nextSlide()">›</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Course carousel functionality
+    const token = 'f4dcacd0522b9bb7c5d9aeebf35041e5';
+    const baseUrl = 'https://gdacademy.goldenduckgroup.com/moodle/webservice/rest/server.php';
+    const fallbackImages = [
+      'image/cover-1.png',
+      'image/cover-2.png', 
+      'image/cover-3.png'
+    ];
+    
+    // Function to get random fallback image
+    function getRandomFallbackImage() {
+      return fallbackImages[Math.floor(Math.random() * fallbackImages.length)];
+    }
+    
+    let allCourses = [], currentSlide = 0, totalSlides = 0, autoSlideInterval;
+
+    async function fetchCourseDetail(courseId) {
+      const res = await fetch(`${baseUrl}?wstoken=${token}&wsfunction=core_course_get_courses_by_field&moodlewsrestformat=json&field=id&value=${courseId}`);
+      const data = await res.json();
+      return data.courses[0];
+    }
+
+    function createCourseCard(course) {
+      let imageUrl = getRandomFallbackImage(); // Default to random fallback
+      
+      if (course.courseimage) {
+        imageUrl = course.courseimage;
+      } else if (course.overviewfiles?.length > 0) {
+        const image = course.overviewfiles.find(f => f.mimetype?.startsWith('image/'));
+        if (image?.fileurl) {
+          imageUrl = image.fileurl + `&token=${token}`;
+        }
+      }
+
+      const card = document.createElement('a');
+      card.className = 'card';
+      card.href = `https://gdacademy.goldenduckgroup.com/moodle/course/view.php?id=${course.id}`;
+      card.target = '_top';
+      card.innerHTML = `
+        <img src="${imageUrl}" alt="Course Image" onerror="this.src='${getRandomFallbackImage()}'">
+        <div class="card-content">
+          <div class="card-title">${course.fullname || course.shortname}</div>
+          <div class="card-summary">${course.summary || 'ไม่มีคำอธิบาย'}</div>
+        </div>`;
+      return card;
+    }
+
+    function renderCarouselSlides() {
+      const track = document.getElementById('carouselTrack');
+      track.innerHTML = '';
+      
+      // For mobile: show 1 course per slide, for desktop: show 3 courses per slide
+      const coursesPerSlide = window.innerWidth <= 480 ? 1 : 3;
+      totalSlides = Math.ceil(allCourses.length / coursesPerSlide);
+      
+      for (let i = 0; i < totalSlides; i++) {
+        const start = i * coursesPerSlide;
+        const slide = document.createElement('div');
+        slide.className = 'course-grid';
+        allCourses.slice(start, start + coursesPerSlide).forEach(c => slide.appendChild(createCourseCard(c)));
+        track.appendChild(slide);
+      }
+      updateCarousel();
+    }
+
+    function updateCarousel() {
+      const track = document.getElementById('carouselTrack');
+      const offset = -currentSlide * track.offsetWidth;
+      track.style.transform = `translateX(${offset}px)`;
+      renderDots();
+    }
+
+    function renderDots() {
+      const dotsContainer = document.getElementById('carouselDots');
+      dotsContainer.innerHTML = '';
+      for (let i = 0; i < totalSlides; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'dot' + (i === currentSlide ? ' active' : '');
+        dot.onclick = () => { currentSlide = i; updateCarousel(); resetAutoSlide(); };
+        dotsContainer.appendChild(dot);
+      }
+    }
+
+    function nextSlide() { 
+      currentSlide = (currentSlide + 1) % totalSlides; 
+      updateCarousel(); 
+      resetAutoSlide(); 
+    }
+    
+    function prevSlide() { 
+      currentSlide = (currentSlide - 1 + totalSlides) % totalSlides; 
+      updateCarousel(); 
+      resetAutoSlide(); 
+    }
+
+    function resetAutoSlide() {
+      clearInterval(autoSlideInterval);
+      autoSlideInterval = setInterval(nextSlide, 6000);
+    }
+
+    async function loadLatestCourses() {
+      const track = document.getElementById('carouselTrack');
+      track.innerHTML = `<div class="loading">⏳ กำลังโหลดข้อมูลคอร์ส...</div>`;
+      try {
+        const res = await fetch(`${baseUrl}?wstoken=${token}&wsfunction=core_course_get_courses&moodlewsrestformat=json`);
+        const all = await res.json();
+        const latest9 = all.filter(c => c.id > 1).sort((a, b) => b.id - a.id).slice(0, 9);
+        allCourses = await Promise.all(latest9.map(c => fetchCourseDetail(c.id)));
+        currentSlide = 0;
+        renderCarouselSlides();
+        resetAutoSlide();
+      } catch (err) {
+        track.innerHTML = `<div class="error">❌ เกิดข้อผิดพลาด: ${err.message}</div>`;
+      }
+    }
+
+    // Handle window resize for responsive carousel
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        if (allCourses.length > 0) {
+          currentSlide = 0;
+          renderCarouselSlides();
+        }
+      }, 250);
+    });
+
+    window.addEventListener('load', loadLatestCourses);
+  </script>
+</body>
+</html>
