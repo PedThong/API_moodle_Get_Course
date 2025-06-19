@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,46 +10,41 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
   <style>
-    html, body {
+    html,
+    body {
       margin: 0;
       padding: 0;
       font-family: 'Roboto';
       background-color: #fff;
       color: #333;
+      height: 100%;
     }
 
-
-    @keyframes marquee {
-      0% { transform: translateX(100%); }
-      100% { transform: translateX(-100%); }
-    }
-
-    /* ✅ Carousel */
     .carousel {
       position: relative;
       width: 100%;
+      height: 450px;
       overflow: hidden;
     }
 
     .carousel-track {
       display: flex;
       transition: transform 0.5s ease;
+      height: 100%;
     }
 
     .carousel-slide {
       min-width: 100%;
       display: flex;
       justify-content: center;
+      height: 100%;
     }
 
     .news-card {
       position: relative;
-      width: 95%;
-      max-width: 1200px;
-      height: 480px;
-      border-radius: 0.75rem;
+      width: 100%;
+      height: 100%;
       overflow: hidden;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     }
 
     .news-card img {
@@ -65,14 +61,10 @@
 
     .news-content {
       position: absolute;
-      bottom: 2.5rem;
+      bottom: 2rem;
       color: white;
       padding: 1.5rem;
       z-index: 10;
-    }
-
-    .news-content p {
-      color: rgb(215, 215, 215);
     }
 
     .news-tag {
@@ -85,73 +77,77 @@
 
     .arrow-btn {
       position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background-color: rgba(0, 0, 0, 0.5);
-      padding: 1rem;
+      top: 0;
+      bottom: 0;
+      width: 20%;
+      background: linear-gradient(to right, rgba(0, 0, 0, 0.6), transparent);
       display: flex;
-      cursor: pointer;
       align-items: center;
       justify-content: center;
       color: white;
       opacity: 0;
-      transition: opacity 0.4s ease;
-      height: 480px;
-      border-radius: 0.75rem;
+      transition: opacity 0.3s;
+    }
+
+    .arrow-btn.right {
+      right: 0;
+      background: linear-gradient(to left, rgba(0, 0, 0, 0.6), transparent);
+    }
+
+    .arrow-btn.left {
+      left: 0;
     }
 
     .arrow-btn:hover {
       opacity: 1;
     }
 
-    .arrow-btn.left { left: 0.1rem; }
-    .arrow-btn.right { right: 0.1rem; }
+    .arrow-btn i {
+      font-size: 2.5rem;
+    }
 
     .progress-bar {
       position: absolute;
       bottom: 0;
       left: 0;
       height: 5px;
-      background-color: #f97316;
-      animation: progress 7.3s linear infinite;
+      background: linear-gradient(90deg, rgba(74, 30, 0, 1) 0%, rgba(249, 115, 22, 1) 100%);
+      animation: progress 7s linear infinite;
     }
 
     @keyframes progress {
-      0% { width: 0%; }
-      100% { width: 100%; }
+      0% {
+        width: 0%;
+      }
+
+      100% {
+        width: 100%;
+      }
     }
 
-    /* ✅ Nav Bar */
     .nav-bar {
       --items: 4;
       position: relative;
       display: flex;
       justify-content: space-around;
       background: #185763;
-      padding: 1.25rem;
-      border-radius: 0.75rem;
-      margin: 1.5rem auto;
-      width: 95%;
-      max-width: 1060px;
-      overflow: hidden;
+      padding: 1rem 0;
+      width: 100%;
+      font-family: 'Roboto';
     }
 
     .nav-bar a {
-      flex: 1;
-      text-align: center;
       color: white;
-      font-size: 1.5rem;
+      font-size: 1.25rem;
       font-weight: 600;
       text-decoration: none;
-      padding: 0.5rem 1rem;
-      position: relative;
-      z-index: 1;
-      transition: all 0.3s ease;
+      transition: transform 0.3s, text-shadow 0.3s;
+      text-align: center;
     }
 
     .nav-bar a:hover {
       transform: scale(1.1);
-      text-shadow: 0 0 12px rgba(173, 255, 255, 0.552);
+      text-shadow: 0 0 8px rgba(173, 255, 255, 0.8);
     }
 
     .nav-bar .line {
@@ -159,13 +155,13 @@
       transition: all 0.4s ease;
       position: absolute;
       bottom: 0;
-      left: calc((var(--index) - 1) * 25%);
+      left: var(--left, calc(100% / var(--items) * (var(--index) - 1)));
       width: 25%;
       height: 4px;
-      background: linear-gradient(to right, #00d692, #1e90ff);
+      background: linear-gradient(to right, #6fffd1, #1e90ff);
       border-radius: 4px;
       --index: 0;
-      filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.8));
+      filter: drop-shadow(0 0 8px rgba(30, 144, 255, 0.7));
       z-index: 0;
     }
 
@@ -175,30 +171,20 @@
     .nav-bar a:nth-of-type(4):hover ~ .line { --index: 4; opacity: 1; }
   </style>
 </head>
-<body>
 
-  <marquee behavior="scroll" direction="left" scrollamount="3" style="font-size: 2.5em; font-weight: bold; 
-                    position: relative; z-index: 10;">
-    🎉 Welcome to GD Academy – Your Learning Hub for Growth! 🎉
-  </marquee>
-  
-  <!-- ✅ Carousel Section -->
-  <section class="w-full max-w-6xl mx-auto mt-8 px-4">
-    <div class="carousel" id="carousel">
-      <div class="carousel-track" id="carouselTrack"></div>
-    </div>
+<body>
+  <section class="carousel" id="carousel">
+    <div class="carousel-track" id="carouselTrack"></div>
   </section>
 
-  <!-- ✅ Navigation -->
-  <nav class="nav-bar links">
+  <nav class="nav-bar">
     <a href="https://gdacademy.goldenduckgroup.com/moodle/my/courses.php">My Course</a>
-    <a href="https://gdacademy.goldenduckgroup.com/moodle/course/index.php">Explore</a>
+    <a href="https://gdacademy.goldenduckgroup.com/moodle/course/index.php">Explore all course</a>
     <a href="https://gdacademy.goldenduckgroup.com/moodle/course/view.php?id=161">คู่มือการใช้งาน</a>
     <a href="https://gdacademy.goldenduckgroup.com/moodle/course/view.php?id=160">Beginner guide</a>
     <div class="line"></div>
   </nav>
 
-  <!-- ✅ Script -->
   <script>
     const token = '9474af3b7b0b0de937ebf21b7cf7ab32';
     const baseUrl = 'https://gdacademy.goldenduckgroup.com/moodle/webservice/rest/server.php';
@@ -238,8 +224,12 @@
             <p class="text-sm text-gray-300 leading-snug">${course.summary || ''}</p>
           </div>
           <div class="progress-bar"></div>
-          <div class="arrow-btn left" onclick="prevSlide()"><i class="fas fa-chevron-left"></i></div>
-          <div class="arrow-btn right" onclick="nextSlide()"><i class="fas fa-chevron-right"></i></div>
+          <div class="arrow-btn left" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0" onclick="prevSlide()">
+            <i class="fas fa-chevron-left"></i>
+          </div>
+          <div class="arrow-btn right" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0" onclick="nextSlide()">
+            <i class="fas fa-chevron-right"></i>
+          </div>
         </div>`;
       return slide;
     }
@@ -284,4 +274,5 @@
     window.addEventListener('load', loadLatestCourses);
   </script>
 </body>
+
 </html>
