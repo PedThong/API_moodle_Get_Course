@@ -134,64 +134,88 @@
       }
     }
 
+
     .nav-bar {
-      --items: 4;
-      position: relative;
       display: flex;
-      justify-content: space-around;
+      justify-content: center;
+      align-items: center;
       background: #185763;
+      position: relative;
       padding: 1rem 0;
-      width: 100%;
       font-family: 'Roboto';
     }
 
-    .nav-bar a {
+    .nav-item {
+      position: relative;
+      flex: 1;
+      text-align: center;
+    }
+
+    .nav-item a {
+      display: inline-block;
       color: white;
       font-size: 1.25rem;
       font-weight: 600;
       text-decoration: none;
+      padding: 0.5rem 0;
       transition: transform 0.3s, text-shadow 0.3s;
-      text-align: center;
+      width: 100%;
     }
 
-    .nav-bar a:hover {
+    .nav-item:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      right: 0;
+      top: 12.5%;
+      height: 75%;
+      width: 3px;
+      background-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .nav-item a:hover {
       transform: scale(1.1);
       text-shadow: 0 0 8px rgba(173, 255, 255, 0.8);
     }
 
     .nav-bar .line {
-      opacity: 0;
-      transition: all 0.4s ease;
       position: absolute;
       bottom: 0;
-      left: var(--left, calc(100% / var(--items) * (var(--index) - 1)));
-      width: 25%;
       height: 4px;
-      background: linear-gradient(to right, #6fffd1, #1e90ff);
+      width: 25%;
+      left: 0;
       border-radius: 4px;
-      --index: 0;
-      filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.7));
-      z-index: 0;
+      background: linear-gradient(to right, #00ffae, #ffffff00);
+      opacity: 0;
+      transition: all 0.4s ease;
     }
 
-    .nav-bar a:nth-of-type(1):hover~.line {
-      --index: 1;
+    /* Move underline on hover */
+    .nav-item:nth-child(1):hover~.line {
+      left: 0%;
       opacity: 1;
+      background: linear-gradient(to right, #3DB8D0, #2B9AAF);
+      filter: drop-shadow(0 0 8px #3DB8D0);
     }
 
-    .nav-bar a:nth-of-type(2):hover~.line {
-      --index: 2;
+    .nav-item:nth-child(2):hover~.line {
+      left: 25%;
       opacity: 1;
+      background: linear-gradient(to right, #9E3DD0, #822BAF);
+      filter: drop-shadow(0 0 8px #9E3DD0);
     }
 
-    .nav-bar a:nth-of-type(3):hover~.line {
-      --index: 3;
+    .nav-item:nth-child(3):hover~.line {
+      left: 50%;
       opacity: 1;
+      background: linear-gradient(to right, #D0543D, #AF3F2B);
+      filter: drop-shadow(0 0 8px #D0543D);
     }
 
-    .nav-bar a:nth-of-type(4):hover~.line {
-      --index: 4;
+    .nav-item:nth-child(4):hover~.line {
+      left: 75%;
       opacity: 1;
+      background: linear-gradient(to right, #6FD03D, #58AF2B);
+      filter: drop-shadow(0 0 8px #6FD03D);
     }
   </style>
 </head>
@@ -207,10 +231,18 @@
   </section>
 
   <nav class="nav-bar">
-    <a href="https://gdacademy.goldenduckgroup.com/moodle/my/courses.php" target="_top">My Course</a>
-    <a href="https://gdacademy.goldenduckgroup.com/moodle/course/index.php" target="_top">Explore all course</a>
-    <a href="https://gdacademy.goldenduckgroup.com/moodle/course/view.php?id=161" target="_top" >คู่มือการใช้งาน</a>
-    <a href="https://gdacademy.goldenduckgroup.com/moodle/course/view.php?id=160" target="_top">Beginner guide</a>
+    <div class="nav-item">
+      <a href="https://gdacademy.goldenduckgroup.com/moodle/my/courses.php" target="_top">My Course</a>
+    </div>
+    <div class="nav-item">
+      <a href="https://gdacademy.goldenduckgroup.com/moodle/course/index.php" target="_top">Explore all course</a>
+    </div>
+    <div class="nav-item">
+      <a href="https://gdacademy.goldenduckgroup.com/moodle/course/view.php?id=161" target="_top">คู่มือการใช้งาน</a>
+    </div>
+    <div class="nav-item">
+      <a href="https://gdacademy.goldenduckgroup.com/moodle/course/view.php?id=160" target="_top">Beginner guide</a>
+    </div>
     <div class="line"></div>
   </nav>
 
