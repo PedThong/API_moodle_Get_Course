@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ข่าวเด่นวันนี้ - Thai News</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Roboto';
+      background-color: #fff;
+      color: #333;
+    }
+
+
+    @keyframes marquee {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+
+    /* ✅ Carousel */
+    .carousel {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .carousel-track {
+      display: flex;
+      transition: transform 0.5s ease;
+    }
+
+    .carousel-slide {
+      min-width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+
+    .news-card {
+      position: relative;
+      width: 95%;
+      max-width: 1200px;
+      height: 480px;
+      border-radius: 0.75rem;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .news-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .news-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.3) 40%, rgba(0, 0, 0, 1) 100%);
+    }
+
+    .news-content {
+      position: absolute;
+      bottom: 2.5rem;
+      color: white;
+      padding: 1.5rem;
+      z-index: 10;
+    }
+
+    .news-content p {
+      color: rgb(215, 215, 215);
+    }
+
+    .news-tag {
+      background-color: #f97316;
+      font-size: 0.75rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 0.25rem;
+      margin-right: 0.5rem;
+    }
+
+    .arrow-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: rgba(0, 0, 0, 0.5);
+      padding: 1rem;
+      display: flex;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      height: 480px;
+      border-radius: 0.75rem;
+    }
+
+    .arrow-btn:hover {
+      opacity: 1;
+    }
+
+    .arrow-btn.left { left: 0.1rem; }
+    .arrow-btn.right { right: 0.1rem; }
+
+    .progress-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 5px;
+      background-color: #f97316;
+      animation: progress 7.3s linear infinite;
+    }
+
+    @keyframes progress {
+      0% { width: 0%; }
+      100% { width: 100%; }
+    }
+
+    /* ✅ Nav Bar */
+    .nav-bar {
+      --items: 4;
+      position: relative;
+      display: flex;
+      justify-content: space-around;
+      background: #185763;
+      padding: 1.25rem;
+      border-radius: 0.75rem;
+      margin: 1.5rem auto;
+      width: 95%;
+      max-width: 1060px;
+      overflow: hidden;
+    }
+
+    .nav-bar a {
+      flex: 1;
+      text-align: center;
+      color: white;
+      font-size: 1.5rem;
+      font-weight: 600;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      position: relative;
+      z-index: 1;
+      transition: all 0.3s ease;
+    }
+
+    .nav-bar a:hover {
+      transform: scale(1.1);
+      text-shadow: 0 0 12px rgba(173, 255, 255, 0.552);
+    }
+
+    .nav-bar .line {
+      opacity: 0;
+      transition: all 0.4s ease;
+      position: absolute;
+      bottom: 0;
+      left: calc((var(--index) - 1) * 25%);
+      width: 25%;
+      height: 4px;
+      background: linear-gradient(to right, #00d692, #1e90ff);
+      border-radius: 4px;
+      --index: 0;
+      filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.8));
+      z-index: 0;
+    }
+
+    .nav-bar a:nth-of-type(1):hover ~ .line { --index: 1; opacity: 1; }
+    .nav-bar a:nth-of-type(2):hover ~ .line { --index: 2; opacity: 1; }
+    .nav-bar a:nth-of-type(3):hover ~ .line { --index: 3; opacity: 1; }
+    .nav-bar a:nth-of-type(4):hover ~ .line { --index: 4; opacity: 1; }
+  </style>
+</head>
+<body>
+
+  <!-- ✅ Carousel Section -->
+  <section class="w-full max-w-6xl mx-auto mt-8 px-4">
+    <div class="carousel" id="carousel">
+      <div class="carousel-track" id="carouselTrack"></div>
+    </div>
+  </section>
+
+  <!-- ✅ Navigation -->
+  <nav class="nav-bar links">
+    <a href="https://gdacademy.goldenduckgroup.com/moodle/my/courses.php">My Course</a>
+    <a href="https://gdacademy.goldenduckgroup.com/moodle/course/index.php">Explore</a>
+    <a href="https://gdacademy.goldenduckgroup.com/moodle/course/view.php?id=161">คู่มือการใช้งาน</a>
+    <a href="https://gdacademy.goldenduckgroup.com/moodle/course/view.php?id=160">Beginner guide</a>
+    <div class="line"></div>
+  </nav>
+
+  <!-- ✅ Script -->
+  <script>
+    const token = '9474af3b7b0b0de937ebf21b7cf7ab32';
+    const baseUrl = 'https://gdacademy.goldenduckgroup.com/moodle/webservice/rest/server.php';
+    const fallbackImages = ['image/cover-1.png', 'image/cover-2.png', 'image/cover-3.png'];
+
+    function getRandomFallbackImage() {
+      return fallbackImages[Math.floor(Math.random() * fallbackImages.length)];
+    }
+
+    async function fetchCourseDetail(courseId) {
+      const res = await fetch(`${baseUrl}?wstoken=${token}&wsfunction=core_course_get_courses_by_field&moodlewsrestformat=json&field=id&value=${courseId}`);
+      const data = await res.json();
+      return data.courses[0];
+    }
+
+    let allCourses = [], currentSlide = 0, autoSlideInterval;
+
+    function createSlide(course) {
+      let imageUrl = getRandomFallbackImage();
+      if (course.courseimage) imageUrl = course.courseimage;
+      else if (course.overviewfiles?.length > 0) {
+        const image = course.overviewfiles.find(f => f.mimetype?.startsWith('image/'));
+        if (image?.fileurl) imageUrl = image.fileurl + `&token=${token}`;
+      }
+
+      const slide = document.createElement('div');
+      slide.className = 'carousel-slide';
+      slide.innerHTML = `
+        <div class="news-card">
+          <img src="${imageUrl}" alt="ข่าวเด่น" onerror="this.src='${getRandomFallbackImage()}'">
+          <div class="news-overlay"></div>
+          <div class="news-content">
+            <div class="flex items-center mb-2">
+              <span class="news-tag">New Course!!</span>
+            </div>
+            <h2 class="text-xl font-bold leading-snug mb-1">${course.fullname || course.shortname}</h2>
+            <p class="text-sm text-gray-300 leading-snug">${course.summary || ''}</p>
+          </div>
+          <div class="progress-bar"></div>
+          <div class="arrow-btn left" onclick="prevSlide()"><i class="fas fa-chevron-left"></i></div>
+          <div class="arrow-btn right" onclick="nextSlide()"><i class="fas fa-chevron-right"></i></div>
+        </div>`;
+      return slide;
+    }
+
+    function renderCarousel() {
+      const track = document.getElementById('carouselTrack');
+      track.innerHTML = '';
+      allCourses.slice(0, 5).forEach(course => {
+        track.appendChild(createSlide(course));
+      });
+      updateCarousel();
+    }
+
+    function updateCarousel() {
+      const track = document.getElementById('carouselTrack');
+      track.style.transform = `translateX(-${currentSlide * 100}%)`;
+    }
+
+    function nextSlide() {
+      currentSlide = (currentSlide + 1) % 5;
+      updateCarousel();
+    }
+
+    function prevSlide() {
+      currentSlide = (currentSlide - 1 + 5) % 5;
+      updateCarousel();
+    }
+
+    async function loadLatestCourses() {
+      try {
+        const res = await fetch(`${baseUrl}?wstoken=${token}&wsfunction=core_course_get_courses&moodlewsrestformat=json`);
+        const all = await res.json();
+        const latest = all.filter(c => c.id > 1).sort((a, b) => b.id - a.id).slice(0, 8);
+        allCourses = await Promise.all(latest.map(c => fetchCourseDetail(c.id)));
+        renderCarousel();
+        autoSlideInterval = setInterval(nextSlide, 7000);
+      } catch (error) {
+        document.getElementById('carousel').innerHTML = `<p class="text-center py-6 text-red-500">❌ ไม่สามารถโหลดข่าวได้: ${error.message}</p>`;
+      }
+    }
+
+    window.addEventListener('load', loadLatestCourses);
+  </script>
+</body>
+</html>
