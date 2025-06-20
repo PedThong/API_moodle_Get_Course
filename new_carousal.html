@@ -47,12 +47,17 @@
       height: 100%;
     }
 
-    .news-card {
+    .news-card-wrapper {
       position: relative;
       width: 100%;
       height: 100%;
+    }
+
+    .news-card {
+      width: 100%;
+      height: 100%;
+      display: block;
       overflow: hidden;
-      /* border-radius: 35px 35px 0px 0px; */
     }
 
     .news-card img {
@@ -135,19 +140,11 @@
       bottom: 0;
       left: 0;
       height: 5px;
+      width: 0%;
       background: linear-gradient(90deg, rgba(74, 30, 0, 1) 0%, rgba(249, 115, 22, 1) 100%);
-      animation: progress 7s linear infinite;
+      transition: width 0.1s linear;
     }
 
-    @keyframes progress {
-      0% {
-        width: 0%;
-      }
-
-      100% {
-        width: 100%;
-      }
-    }
 
 
     .nav-bar {
@@ -276,7 +273,10 @@
       return data.courses[0];
     }
 
-    let allCourses = [], currentSlide = 0, autoSlideInterval;
+    let allCourses = [], currentSlide = 0, autoSlideInterval, progressTimer;
+    let progress = 0;
+    const slideDuration = 7000; // 7 seconds
+    const progressStep = 100 / (slideDuration / 100); // 100 steps over 7s
 
     function createSlide(course) {
       let imageUrl = getRandomFallbackImage();
@@ -289,25 +289,64 @@
       const slide = document.createElement('div');
       slide.className = 'carousel-slide';
       slide.innerHTML = `
-        <div class="news-card">
-          <img src="${imageUrl}" alt="Courseเด่น" onerror="this.src='${getRandomFallbackImage()}'">
-          <div class="news-overlay"></div>
-          <div class="news-content">
-            <div class="flex items-center mb-2">
-              <span class="news-tag">New Course!!</span>
+    <div class="news-card-wrapper">
+          <a href="https://gdacademy.goldenduckgroup.com/moodle/course/view.php?id=${course.id}" target="_top" class="news-card">
+            <img src="${imageUrl}" alt="Courseเด่น" onerror="this.src='${getRandomFallbackImage()}'">
+            <div class="news-overlay"></div>
+            <div class="news-content">
+              <div class="flex items-center mb-2">
+                <span class="news-tag">New Course!!</span>
+              </div>
+              <h2 class="text-xl font-bold leading-snug mb-1">${course.fullname || course.shortname}</h2>
+              <p class="text-sm text-gray-300 leading-snug">${course.summary || ''}</p>
             </div>
-            <h2 class="text-xl font-bold leading-snug mb-1">${course.fullname || course.shortname}</h2>
-            <p class="text-sm text-gray-300 leading-snug">${course.summary || ''}</p>
-          </div>
-          <div class="progress-bar"></div>
-          <div class="arrow-btn left" onclick="prevSlide()">
+            <div class="progress-bar"></div>
+          </a>
+          <div class="arrow-btn left" onclick="prevSlide(event)">
             <i class="fas fa-chevron-left"></i>
           </div>
-          <div class="arrow-btn right" onclick="nextSlide()">
+          <div class="arrow-btn right" onclick="nextSlide(event)">
             <i class="fas fa-chevron-right"></i>
           </div>
         </div>`;
       return slide;
+    }
+
+    function resetProgressBar() {
+      progress = 0;
+      updateProgressBar();
+    }
+
+    function updateProgressBar() {
+      const bars = document.querySelectorAll('.progress-bar');
+      bars.forEach(bar => {
+        bar.style.width = `${progress}%`;
+      });
+    }
+
+    function startProgressBar() {
+      progressTimer = setInterval(() => {
+        progress += progressStep;
+        if (progress >= 100) {
+          progress = 0;
+          nextSlide();
+        }
+        updateProgressBar();
+      }, 100);
+    }
+
+    function stopProgressBar() {
+      clearInterval(progressTimer);
+      progressTimer = null;
+    }
+
+    function startAutoSlide() {
+      resetProgressBar(); // รีเซ็ต Progress Bar ก่อนเริ่มใหม่
+      startProgressBar();
+    }
+
+    function stopAutoSlide() {
+      stopProgressBar();
     }
 
     function renderCarousel() {
@@ -317,6 +356,10 @@
         track.appendChild(createSlide(course));
       });
       updateCarousel();
+
+      const carousel = document.getElementById('carousel');
+      carousel.addEventListener('mouseenter', stopAutoSlide);
+      carousel.addEventListener('mouseleave', startAutoSlide);
     }
 
     function updateCarousel() {
@@ -324,27 +367,41 @@
       track.style.transform = `translateX(-${currentSlide * 100}%)`;
     }
 
-    function nextSlide() {
+    function nextSlide(e) {
+      if (e) e.stopPropagation();
       currentSlide = (currentSlide + 1) % 5;
       updateCarousel();
+      
+      // รีเซ็ต Progress Bar เมื่อเปลี่ยนหน้าด้วยตนเอง
+      if (e) {
+        resetProgressBar();
+      }
     }
 
-    function prevSlide() {
+    function prevSlide(e) {
+      if (e) e.stopPropagation();
       currentSlide = (currentSlide - 1 + 5) % 5;
       updateCarousel();
+      
+      // รีเซ็ต Progress Bar เมื่อเปลี่ยนหน้าด้วยตนเอง
+      if (e) {
+        resetProgressBar();
+      }
     }
 
-    async function loadLatestCourses() {
-      try {
-        const res = await fetch(`${baseUrl}?wstoken=${token}&wsfunction=core_course_get_courses&moodlewsrestformat=json`);
-        const all = await res.json();
-        const latest = all.filter(c => c.id > 1).sort((a, b) => b.id - a.id).slice(0, 8);
-        allCourses = await Promise.all(latest.map(c => fetchCourseDetail(c.id)));
-        renderCarousel();
-        autoSlideInterval = setInterval(nextSlide, 7000);
-      } catch (error) {
-        document.getElementById('carousel').innerHTML = `<p class="text-center py-6 text-red-500">❌ ไม่สามารถโหลดCourseได้: ${error.message}</p>`;
-      }
+    function loadLatestCourses() {
+      fetch(`${baseUrl}?wstoken=${token}&wsfunction=core_course_get_courses&moodlewsrestformat=json`)
+        .then(res => res.json())
+        .then(async all => {
+          const latest = all.filter(c => c.id > 1).sort((a, b) => b.id - a.id).slice(0, 8);
+          allCourses = await Promise.all(latest.map(c => fetchCourseDetail(c.id)));
+          renderCarousel();
+          startAutoSlide();
+        })
+        .catch(error => {
+          document.getElementById('carousel').innerHTML =
+            `<p class="text-center py-6 text-red-500">❌ ไม่สามารถโหลดCourseได้: ${error.message}</p>`;
+        });
     }
 
     window.addEventListener('load', loadLatestCourses);
