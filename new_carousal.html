@@ -4,7 +4,6 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ข่าวเด่นวันนี้ - Thai News</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -89,26 +88,42 @@
       top: 0;
       bottom: 0;
       width: 20%;
-      background: linear-gradient(to right, rgba(0, 0, 0, 0.6), transparent);
+      background: transparent;
       display: flex;
       align-items: center;
-      justify-content: center;
       color: white;
-      opacity: 0;
-      transition: opacity 0.3s;
+      opacity: 0.4;
+      transition: all 0.3s ease-in-out;
+      cursor: pointer;
+      z-index: 15;
     }
 
     .arrow-btn.right {
       right: 0;
-      background: linear-gradient(to left, rgba(0, 0, 0, 0.6), transparent);
+      justify-content: flex-end;
+      padding-right: 20px;
     }
 
     .arrow-btn.left {
       left: 0;
+      justify-content: flex-start;
+      padding-left: 20px;
     }
 
     .arrow-btn:hover {
       opacity: 1;
+    }
+
+    .arrow-btn.left:hover {
+      background: linear-gradient(to right, rgba(0, 0, 0, 0.6), transparent);
+      justify-content: center;
+      padding-left: 0;
+    }
+
+    .arrow-btn.right:hover {
+      background: linear-gradient(to left, rgba(0, 0, 0, 0.6), transparent);
+      justify-content: center;
+      padding-right: 0;
     }
 
     .arrow-btn i {
@@ -275,7 +290,7 @@
       slide.className = 'carousel-slide';
       slide.innerHTML = `
         <div class="news-card">
-          <img src="${imageUrl}" alt="ข่าวเด่น" onerror="this.src='${getRandomFallbackImage()}'">
+          <img src="${imageUrl}" alt="Courseเด่น" onerror="this.src='${getRandomFallbackImage()}'">
           <div class="news-overlay"></div>
           <div class="news-content">
             <div class="flex items-center mb-2">
@@ -285,10 +300,10 @@
             <p class="text-sm text-gray-300 leading-snug">${course.summary || ''}</p>
           </div>
           <div class="progress-bar"></div>
-          <div class="arrow-btn left" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0" onclick="prevSlide()">
+          <div class="arrow-btn left" onclick="prevSlide()">
             <i class="fas fa-chevron-left"></i>
           </div>
-          <div class="arrow-btn right" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0" onclick="nextSlide()">
+          <div class="arrow-btn right" onclick="nextSlide()">
             <i class="fas fa-chevron-right"></i>
           </div>
         </div>`;
@@ -328,7 +343,7 @@
         renderCarousel();
         autoSlideInterval = setInterval(nextSlide, 7000);
       } catch (error) {
-        document.getElementById('carousel').innerHTML = `<p class="text-center py-6 text-red-500">❌ ไม่สามารถโหลดข่าวได้: ${error.message}</p>`;
+        document.getElementById('carousel').innerHTML = `<p class="text-center py-6 text-red-500">❌ ไม่สามารถโหลดCourseได้: ${error.message}</p>`;
       }
     }
 
