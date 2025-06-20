@@ -140,19 +140,11 @@
       bottom: 0;
       left: 0;
       height: 5px;
+      width: 0%;
       background: linear-gradient(90deg, rgba(74, 30, 0, 1) 0%, rgba(249, 115, 22, 1) 100%);
-      animation: progress 7s linear infinite;
+      transition: width 0.1s linear;
     }
 
-    @keyframes progress {
-      0% {
-        width: 0%;
-      }
-
-      100% {
-        width: 100%;
-      }
-    }
 
 
     .nav-bar {
@@ -318,6 +310,16 @@
     }
 
 
+    function startAutoSlide() {
+      autoSlideInterval = setInterval(nextSlide, 7000);
+      startProgressBar();
+    }
+
+    function stopAutoSlide() {
+      clearInterval(autoSlideInterval);
+      stopProgressBar();
+    }
+
     function renderCarousel() {
       const track = document.getElementById('carouselTrack');
       track.innerHTML = '';
@@ -325,7 +327,13 @@
         track.appendChild(createSlide(course));
       });
       updateCarousel();
+
+      const carousel = document.getElementById('carousel');
+      carousel.addEventListener('mouseenter', stopAutoSlide);
+      carousel.addEventListener('mouseleave', startAutoSlide);
     }
+
+
 
     function updateCarousel() {
       const track = document.getElementById('carouselTrack');
@@ -345,18 +353,51 @@
     }
 
 
-    async function loadLatestCourses() {
-      try {
-        const res = await fetch(`${baseUrl}?wstoken=${token}&wsfunction=core_course_get_courses&moodlewsrestformat=json`);
-        const all = await res.json();
-        const latest = all.filter(c => c.id > 1).sort((a, b) => b.id - a.id).slice(0, 8);
-        allCourses = await Promise.all(latest.map(c => fetchCourseDetail(c.id)));
-        renderCarousel();
-        autoSlideInterval = setInterval(nextSlide, 7000);
-      } catch (error) {
-        document.getElementById('carousel').innerHTML = `<p class="text-center py-6 text-red-500">❌ ไม่สามารถโหลดCourseได้: ${error.message}</p>`;
-      }
+    function loadLatestCourses() {
+      fetch(`${baseUrl}?wstoken=${token}&wsfunction=core_course_get_courses&moodlewsrestformat=json`)
+        .then(res => res.json())
+        .then(async all => {
+          const latest = all.filter(c => c.id > 1).sort((a, b) => b.id - a.id).slice(0, 8);
+          allCourses = await Promise.all(latest.map(c => fetchCourseDetail(c.id)));
+          renderCarousel();
+          startAutoSlide(); // 👈 ใช้ฟังก์ชันนี้แทน setInterval ตรงๆ
+        })
+        .catch(error => {
+          document.getElementById('carousel').innerHTML =
+            `<p class="text-center py-6 text-red-500">❌ ไม่สามารถโหลดCourseได้: ${error.message}</p>`;
+        });
     }
+
+    let progress = 0;
+let progressTimer = null;
+const progressStep = 100 / (7000 / 100); // 100 steps over 7s
+
+function resetProgressBar() {
+  progress = 0;
+  updateProgressBar();
+}
+
+function updateProgressBar() {
+  const bars = document.querySelectorAll('.progress-bar');
+  bars.forEach(bar => {
+    bar.style.width = `${progress}%`;
+  });
+}
+
+function startProgressBar() {
+  progressTimer = setInterval(() => {
+    progress += progressStep;
+    if (progress >= 100) {
+      progress = 0;
+      nextSlide(); // auto-slide
+    }
+    updateProgressBar();
+  }, 100);
+}
+
+function stopProgressBar() {
+  clearInterval(progressTimer);
+}
 
     window.addEventListener('load', loadLatestCourses);
   </script>
