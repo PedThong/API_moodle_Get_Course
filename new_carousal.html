@@ -101,7 +101,7 @@
       width: 100%;
       height: 500px;
       overflow: hidden;
-      border-radius: 20px 20px 20px 20px;
+      border-radius: 20px 20px 0px 0px;
       margin-bottom: 20px;
     }
 
@@ -222,16 +222,17 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      background: #185763;
       position: relative;
-      padding: 1rem 0;
-      border-radius: 8px;
     }
 
     .nav-item {
       position: relative;
       flex: 1;
       text-align: center;
+      background: #185763;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 10px;
     }
 
     .nav-item a {
@@ -245,58 +246,11 @@
       width: 100%;
     }
 
-    .nav-item:not(:last-child)::after {
-      content: "";
-      position: absolute;
-      right: 0;
-      top: 12.5%;
-      height: 75%;
-      width: 3px;
-      background-color: rgba(255, 255, 255, 0.3);
-    }
-
     .nav-item a:hover {
       transform: scale(1.1);
       text-shadow: 0 0 8px rgba(173, 255, 255, 0.8);
+      
     }
-
-    .nav-bar .line {
-      position: absolute;
-      bottom: 0;
-      height: 4px;
-      width: 33.33%;
-      left: 0;
-      border-radius: 4px;
-      background: linear-gradient(to right, #00ffae, #ffffff00);
-      opacity: 0;
-      transition: all 0.4s ease;
-    }
-
-    /* Move underline on hover */
-    .nav-item:nth-child(1):hover~.line {
-      left: 0%;
-      opacity: 1;
-      background: linear-gradient(to right, #3DB8D0, #2B9AAF);
-      filter: drop-shadow(0 0 8px #3DB8D0);
-    }
-
-    .nav-item:nth-child(2):hover~.line {
-      left: 33.33%;
-      opacity: 1;
-      background: linear-gradient(to right, #9E3DD0, #822BAF);
-      filter: drop-shadow(0 0 8px #9E3DD0);
-    }
-
-    .nav-item:nth-child(3):hover~.line {
-      left: 66.66%;
-      opacity: 1;
-      background: linear-gradient(to right, #D0543D, #AF3F2B);
-      filter: drop-shadow(0 0 8px #D0543D);
-    }
-
-
-
-
 
 
     @media screen and (max-width: 1023px) {
@@ -426,7 +380,6 @@
     <div class="nav-item">
       <a href="https://gdacademy.goldenduckgroup.com/moodle/course/view.php?id=160" target="_top">Beginner guide</a>
     </div>
-    <div class="line"></div>
   </nav>
 
   <script>
